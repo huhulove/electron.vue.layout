@@ -10,7 +10,7 @@ module.exports = {
 	rules: {
 		'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
 		'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
-		'no-tabs': 'off',
+		'no-tabs': 'off', // 文件任何位置查找制表符：代码，注释或其他任何内容。  off - 不检查
 		indent: ['error', 'tab'], // 2 - 使用两个空格缩进   tab - 使用tab 缩进
 		'no-multiple-empty-lines': ['error'], // 代码空行 数量
 		'linebreak-style': [0, 'error', 'windows'], // 使用windows的换行
