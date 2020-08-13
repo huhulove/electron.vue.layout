@@ -1,6 +1,7 @@
 import { app, protocol, BrowserWindow } from 'electron';
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
+import path from 'path';
 import customMenu from './window/menu';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
@@ -17,6 +18,8 @@ function createWindow() {
 	win = new BrowserWindow({
 		width: 800,
 		height: 600,
+		icon: path.join(__dirname, process.env.NODE_ENV === 'production' ? './app.ico' : '../public/app.ico'),
+		title: '快速生成vue.electron框架',
 		webPreferences: {
 			// Use pluginOptions.nodeIntegration, leave this alone
 			// See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
@@ -27,12 +30,13 @@ function createWindow() {
 	customMenu(win);
 
 	if (process.env.WEBPACK_DEV_SERVER_URL) {
-		// Load the url of the dev server if in development mode
+		// 如果是开发模式则加载开发服务器的地址
 		win.loadURL(process.env.WEBPACK_DEV_SERVER_URL);
+		// 打开开发调试工具
 		if (!process.env.IS_TEST) win.webContents.openDevTools();
 	} else {
 		createProtocol('app');
-		// Load the index.html when not in development
+		// 生产模式时加载 index.html
 		win.loadURL('app://./index.html');
 	}
 
@@ -41,7 +45,7 @@ function createWindow() {
 	});
 }
 
-// Quit when all windows are closed.
+// 当所有窗口关闭时则退出应用
 app.on('window-all-closed', () => {
 	// On macOS it is common for applications and their menu bar
 	// to stay active until the user quits explicitly with Cmd + Q
@@ -58,12 +62,10 @@ app.on('activate', () => {
 	}
 });
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
+// 应用初始化完成和新创建的窗口加载完毕后调用此方法, 当此方法执行后可以调用很多api 
 app.on('ready', async () => {
 	if (isDevelopment && !process.env.IS_TEST) {
-		// Install Vue Devtools
+		// 安装 vue 开发工具
 		try {
 			await installExtension(VUEJS_DEVTOOLS);
 		} catch (e) {
