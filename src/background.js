@@ -2,7 +2,9 @@ import { app, protocol, BrowserWindow } from 'electron';
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
 import path from 'path';
-import customMenu from './window/menu';
+
+import customMenu from './window/menu.main';
+import customTrayMenu from './window/menu.tray';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
@@ -27,7 +29,7 @@ function createWindow() {
 		}
 	});
 	// 自定义顶部菜单
-	customMenu(win);
+	customMenu();
 
 	if (process.env.WEBPACK_DEV_SERVER_URL) {
 		// 如果是开发模式则加载开发服务器的地址
@@ -42,6 +44,11 @@ function createWindow() {
 
 	win.on('closed', () => {
 		win = null;
+	});
+
+	win.on('minimize', event => {
+		event.preventDefault();
+		customTrayMenu(win);
 	});
 }
 
@@ -62,7 +69,7 @@ app.on('activate', () => {
 	}
 });
 
-// 应用初始化完成和新创建的窗口加载完毕后调用此方法, 当此方法执行后可以调用很多api 
+// 应用初始化完成和新创建的窗口加载完毕后调用此方法, 当此方法执行后可以调用很多api
 app.on('ready', async () => {
 	if (isDevelopment && !process.env.IS_TEST) {
 		// 安装 vue 开发工具

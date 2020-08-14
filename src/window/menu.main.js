@@ -1,6 +1,7 @@
 import { Menu } from 'electron';
 
 const customMenu = () => {
+	// 主菜单
 	const menuList = [
 		{
 			label: '文件',
