@@ -40,9 +40,20 @@ module.exports = {
 					installerHeaderIcon: './public/app.ico', // 安装时头部图标
 					createDesktopShortcut: true, // 创建桌面图标
 					createStartMenuShortcut: true, // 创建开始菜单图标
-					shortcutName: 'electron.vue.layout', // 图标名称
-					installerSidebar: './public/app.bmp'
-				}
+					shortcutName: 'electron.vue.layout' // 图标名称
+					// installerSidebar: './public/app.bmp', // 安装包安装侧边图片，默认build/installerSidebar.bmp，要求164 × 314 像素
+					// uninstallerSidebar: './build/sidebar.bmp' // 安装包卸载侧边图片，默认build/installerSidebar.bmp，要求164 × 314 像素
+				},
+				releaseInfo: {
+					releaseNotes: '优化框架代码'
+				},
+				publish: [
+					{
+						provider: 'huhulove',
+						url: 'http://127.0.0.1:8080/download/', // 推送的地址
+						channel: 'latest' // 检查更新的渠道
+					}
+				]
 			}
 		}
 	}
