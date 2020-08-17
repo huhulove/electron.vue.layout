@@ -40,7 +40,8 @@ module.exports = {
 					installerHeaderIcon: './public/app.ico', // 安装时头部图标
 					createDesktopShortcut: true, // 创建桌面图标
 					createStartMenuShortcut: true, // 创建开始菜单图标
-					shortcutName: 'electron.vue.layout' // 图标名称
+					shortcutName: 'electron.vue.layout', // 图标名称
+					installerSidebar: './public/app.bmp'
 				}
 			}
 		}
