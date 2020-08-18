@@ -1,4 +1,4 @@
 # 在dev-app-update.yml中配置检查更新的地址，这个地址为开发环境下的地址
-provider: 'huhulove'
+provider: 'generic'
 url: 'http://127.0.0.1:8080/test-download/'
 channel: 'latest'

@@ -1,10 +1,11 @@
-import { app, protocol, BrowserWindow } from 'electron';
+import { app, protocol, BrowserWindow, ipcMain, globalShortcut } from 'electron';
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
 import path from 'path';
 
 import customMenu from './window/menu.main';
 import customTrayMenu from './window/menu.tray';
+import checkVersion from './window/APPAutoUpdater';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
@@ -14,6 +15,11 @@ let win;
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: true, standard: true } }]);
+
+// 主页面一旦加载完成后就开始执行检查更新
+ipcMain.on('checkForUpdate', () => {
+	checkVersion(win);
+});
 
 function createWindow() {
 	// 创建浏览器窗口
@@ -25,7 +31,7 @@ function createWindow() {
 		webPreferences: {
 			// Use pluginOptions.nodeIntegration, leave this alone
 			// See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
-			nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION
+			nodeIntegration: true
 		}
 	});
 	// 自定义顶部菜单
@@ -35,17 +41,19 @@ function createWindow() {
 		// 如果是开发模式则加载开发服务器的地址
 		win.loadURL(process.env.WEBPACK_DEV_SERVER_URL);
 		// 打开开发调试工具
-		if (!process.env.IS_TEST) win.webContents.openDevTools();
+		globalShortcut.register('CTRL+SHIFT+I', () => {
+			if (!process.env.IS_TEST) win.webContents.openDevTools();
+		});
 	} else {
 		createProtocol('app');
 		// 生产模式时加载 index.html
 		win.loadURL('app://./index.html');
 	}
-
+	// 关闭窗口
 	win.on('closed', () => {
 		win = null;
 	});
-
+	// 最小化窗口
 	win.on('minimize', event => {
 		event.preventDefault();
 		customTrayMenu(win);

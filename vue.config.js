@@ -49,7 +49,7 @@ module.exports = {
 				},
 				publish: [
 					{
-						provider: 'huhulove',
+						provider: 'generic', // 使用自己的文件服务器
 						url: 'http://127.0.0.1:8080/download/', // 推送的地址
 						channel: 'latest' // 检查更新的渠道
 					}
