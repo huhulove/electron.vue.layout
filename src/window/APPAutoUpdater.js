@@ -1,4 +1,5 @@
 import { autoUpdater } from 'electron-updater';
+import { ipcMain } from 'electron';
 /* import Store from 'electron-store';
 import Log from 'electron-log';
 import path from 'path'; */
@@ -10,10 +11,26 @@ const sendUpdateMessage = (win, text) => {
 
 const checkVersion = win => {
 	const message = {
-		error: { status: -1, message: '检查更新出错' },
-		checking: { status: 1, message: '正在检查更新……' },
-		updateAva: { status: 2, message: '检测到新版本，正在下载……' },
-		updateNotAva: { status: 3, message: '已是最新版本，无需更新' }
+		error: {
+			status: -1,
+			message: '检查更新出错'
+		},
+		checking: {
+			status: 1,
+			message: '正在检查更新……'
+		},
+		updateAva: {
+			status: 2,
+			message: '检测到新版本，正在下载……'
+		},
+		updateNotAva: {
+			status: 3,
+			message: '已是最新版本，无需更新'
+		},
+		updateComplete: {
+			status: 4,
+			message: '下载完成, 请问现在是否更新? '
+		}
 	};
 	autoUpdater.setFeedURL('http://localhost:8090/');
 
@@ -37,18 +54,28 @@ const checkVersion = win => {
 		sendUpdateMessage(win, message.updateNotAva);
 	});
 	// 下载可更新的安装包
-	autoUpdater.on('update-downloaded', info => {
-		console.log(123);
-		console.log(info);
+	autoUpdater.on('update-downloaded', () => {
+		sendUpdateMessage(win, message.updateComplete);
 	});
 	// 监听下载进度
-	autoUpdater.on('download-progress', info => {
-		console.log(456);
-		console.log(info);
+	autoUpdater.on('download-progress', progressObj => {
+		win.webContents.send('downloadProgress', progressObj);
 	});
 
 	autoUpdater.checkForUpdates();
+	return autoUpdater;
 };
+
+// 手动更新
+ipcMain.on('checkForUpdate', () => {
+	checkVersion(win);
+});
+
+// 立即更新
+ipcMain.on('updateNow', () => {
+	// 退出应用并安装
+	autoUpdater.quitAndInstall();
+});
 
 /* return false;
 

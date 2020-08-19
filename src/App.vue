@@ -1,6 +1,7 @@
 <template>
 	<div id="app">
-        <button @click="showUpdater">更新</button>
+        <el-button type="primary">立即更新</el-button>
+		<button @click="showUpdater">更新</button>
 		<div id="nav">
 			<router-link to="/">Home</router-link>
 			|
@@ -11,21 +12,10 @@
 </template>
 
 <script>
-const { ipcRenderer } = window.require('electron');
+import updateMixin from './mixins/update.mixin';
 
 export default {
-	mounted() {
-		ipcRenderer.on('message', (event, obj) => {
-			console.log(event);
-			console.log(obj);
-		});
-	},
-	methods: {
-		showUpdater() {
-			this.showUpdate = true;
-			ipcRenderer.send('checkForUpdate');
-		}
-	}
+	mixins: [updateMixin]
 };
 </script>
 <style lang="less">

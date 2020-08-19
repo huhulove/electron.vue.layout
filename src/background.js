@@ -1,4 +1,4 @@
-import { app, protocol, BrowserWindow, ipcMain, globalShortcut } from 'electron';
+import { app, protocol, BrowserWindow, globalShortcut } from 'electron';
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
 import path from 'path';
@@ -12,14 +12,10 @@ const isDevelopment = process.env.NODE_ENV !== 'production';
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
+let autoUpdate;
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: true, standard: true } }]);
-
-// 主页面一旦加载完成后就开始执行检查更新
-ipcMain.on('checkForUpdate', () => {
-	checkVersion(win);
-});
 
 function createWindow() {
 	// 创建浏览器窗口
@@ -58,6 +54,11 @@ function createWindow() {
 		event.preventDefault();
 		customTrayMenu(win);
 	});
+
+	// 主页面一旦加载完成后就开始执行检查更新
+	win.webContents.on('did-finish-load', () => {
+		autoUpdate = checkVersion(win);
+	});
 }
 
 // 当所有窗口关闭时则退出应用
@@ -65,6 +66,7 @@ app.on('window-all-closed', () => {
 	// On macOS it is common for applications and their menu bar
 	// to stay active until the user quits explicitly with Cmd + Q
 	if (process.platform !== 'darwin') {
+		autoUpdate.quitAndInstall();
 		app.quit();
 	}
 });
