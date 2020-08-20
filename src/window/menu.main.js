@@ -1,6 +1,7 @@
 import { Menu } from 'electron';
+import checkVersion from './APPAutoUpdater.js';
 
-const customMenu = () => {
+const customMenu = win => {
 	// 主菜单
 	const menuList = [
 		{
@@ -29,6 +30,14 @@ const customMenu = () => {
 					type: 'normal',
 					click() {
 						// alert('ctrl');
+					}
+				},
+				{
+					label: '检查',
+					type: 'normal',
+					click() {
+						// 手动更新
+						checkVersion(win);
 					}
 				}
 			]

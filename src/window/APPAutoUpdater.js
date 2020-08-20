@@ -32,6 +32,7 @@ const checkVersion = win => {
 			message: '下载完成, 请问现在是否更新? '
 		}
 	};
+	let isInstall;
 	autoUpdater.setFeedURL('http://localhost:8090/');
 
 	// 将自动下载包设置为false，产品的需求是让用户自己点击更新下载
@@ -47,10 +48,12 @@ const checkVersion = win => {
 	});
 	// 检测有可更新的应用包
 	autoUpdater.on('update-available', () => {
+		isInstall = true;
 		sendUpdateMessage(win, message.updateAva);
 	});
 	// 检测没有可用更新时发出
 	autoUpdater.on('update-not-available', () => {
+		isInstall = false;
 		sendUpdateMessage(win, message.updateNotAva);
 	});
 	// 下载可更新的安装包
@@ -63,13 +66,11 @@ const checkVersion = win => {
 	});
 
 	autoUpdater.checkForUpdates();
-	return autoUpdater;
+	return {
+		autoUpdater,
+		isInstall
+	};
 };
-
-// 手动更新
-ipcMain.on('checkForUpdate', () => {
-	checkVersion(win);
-});
 
 // 立即更新
 ipcMain.on('updateNow', () => {

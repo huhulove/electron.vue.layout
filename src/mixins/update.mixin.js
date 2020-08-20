@@ -34,9 +34,6 @@ const updateMixin = {
 		});
 	},
 	methods: {
-		showUpdater() {
-			ipcRenderer.send('checkForUpdate');
-		},
 		hnotify(message) {
 			Notification.closeAll();
 			this.$notify({

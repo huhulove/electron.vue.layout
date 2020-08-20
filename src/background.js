@@ -3,7 +3,7 @@ import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
 import path from 'path';
 
-import customMenu from './window/menu.main';
+/* import customMenu from './window/menu.main'; */
 import customTrayMenu from './window/menu.tray';
 import checkVersion from './window/APPAutoUpdater';
 
@@ -13,6 +13,7 @@ const isDevelopment = process.env.NODE_ENV !== 'production';
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
 let autoUpdate;
+let isInstall;
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: true, standard: true } }]);
@@ -31,7 +32,7 @@ function createWindow() {
 		}
 	});
 	// 自定义顶部菜单
-	customMenu();
+	// customMenu(win);
 
 	if (process.env.WEBPACK_DEV_SERVER_URL) {
 		// 如果是开发模式则加载开发服务器的地址
@@ -57,7 +58,8 @@ function createWindow() {
 
 	// 主页面一旦加载完成后就开始执行检查更新
 	win.webContents.on('did-finish-load', () => {
-		autoUpdate = checkVersion(win);
+		autoUpdate = checkVersion(win).autoUpdater;
+		isInstall = checkVersion(win).isInstall;
 	});
 }
 
@@ -66,7 +68,7 @@ app.on('window-all-closed', () => {
 	// On macOS it is common for applications and their menu bar
 	// to stay active until the user quits explicitly with Cmd + Q
 	if (process.platform !== 'darwin') {
-		autoUpdate.quitAndInstall();
+		isInstall && autoUpdate.quitAndInstall();
 		app.quit();
 	}
 });
