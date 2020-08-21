@@ -1,67 +1,32 @@
-import { app, protocol, BrowserWindow, globalShortcut } from 'electron';
-import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
+import { app, protocol, ipcMain } from 'electron';
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
-import path from 'path';
 
-/* import customMenu from './window/menu.main'; */
-import customTrayMenu from './window/menu.tray';
-import checkVersion from './window/APPAutoUpdater';
+import createLoginWindow from './window/login/login.window';
+import createMainWindow from './window/main/main.window';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
-
-// Keep a global reference of the window object, if you don't, the window will
-// be closed automatically when the JavaScript object is garbage collected.
-let win;
-let autoUpdate;
-let isInstall;
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: true, standard: true } }]);
 
-function createWindow() {
-	// 创建浏览器窗口
-	win = new BrowserWindow({
-		width: 800,
-		height: 600,
-		icon: path.join(__dirname, process.env.NODE_ENV === 'production' ? './app.ico' : '../public/app.ico'),
-		title: '快速生成vue.electron框架',
-		webPreferences: {
-			// Use pluginOptions.nodeIntegration, leave this alone
-			// See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
-			nodeIntegration: true
-		}
-	});
-	// 自定义顶部菜单
-	// customMenu(win);
-
-	if (process.env.WEBPACK_DEV_SERVER_URL) {
-		// 如果是开发模式则加载开发服务器的地址
-		win.loadURL(process.env.WEBPACK_DEV_SERVER_URL);
-		// 打开开发调试工具
-		globalShortcut.register('CTRL+SHIFT+I', () => {
-			if (!process.env.IS_TEST) win.webContents.openDevTools();
-		});
-	} else {
-		createProtocol('app');
-		// 生产模式时加载 index.html
-		win.loadURL('app://./index.html');
-	}
-	// 关闭窗口
-	win.on('closed', () => {
-		win = null;
-	});
-	// 最小化窗口
-	win.on('minimize', event => {
-		event.preventDefault();
-		customTrayMenu(win);
-	});
-
-	// 主页面一旦加载完成后就开始执行检查更新
-	win.webContents.on('did-finish-load', () => {
-		autoUpdate = checkVersion(win).autoUpdater;
-		isInstall = checkVersion(win).isInstall;
-	});
-}
+let winLogin;
+let isInstall;
+let autoUpdate;
+// 监听打开主窗口
+ipcMain.on('openMainWindow', () => {
+	winLogin.close();
+	const r = createMainWindow();
+	isInstall = r.isInstall;
+	autoUpdate = r.autoUpdate;
+});
+// 监听最小化窗口
+ipcMain.on('minLoginWindow', () => {
+	winLogin.minimize();
+});
+// 监听关闭窗口
+ipcMain.on('maxLoginWindow', () => {
+	app.quit();
+});
 
 // 当所有窗口关闭时则退出应用
 app.on('window-all-closed', () => {
@@ -74,10 +39,10 @@ app.on('window-all-closed', () => {
 });
 
 app.on('activate', () => {
-	// On macOS it's common to re-create a window in the app when the
-	// dock icon is clicked and there are no other windows open.
-	if (win === null) {
-		createWindow();
+	// 当在 MAC 机器上直接点击图标不会打开应用窗口时，执行以下语句
+	if (winLogin === null) {
+		// 创建登录窗口
+		winLogin = createLoginWindow();
 	}
 });
 
@@ -91,7 +56,8 @@ app.on('ready', async () => {
 			console.error('Vue Devtools failed to install:', e.toString());
 		}
 	}
-	createWindow();
+	// 创建登录窗口
+	winLogin = createLoginWindow();
 });
 
 // Exit cleanly on request from parent process in development mode.

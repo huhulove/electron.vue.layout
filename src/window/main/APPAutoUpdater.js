@@ -1,14 +1,10 @@
 import { autoUpdater } from 'electron-updater';
 import { ipcMain } from 'electron';
-/* import Store from 'electron-store';
-import Log from 'electron-log';
-import path from 'path'; */
 
 // 通过主进程发送事件给渲染进程，提示更新信息
 const sendUpdateMessage = (win, text) => {
 	win.webContents.send('message', text);
 };
-
 const checkVersion = win => {
 	const message = {
 		error: {

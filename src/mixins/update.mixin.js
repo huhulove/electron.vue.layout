@@ -32,6 +32,9 @@ const updateMixin = {
 		ipcRenderer.on('downloadProgress', (event, progressObj) => {
 			that.progress = progressObj.percent || 0;
 		});
+		ipcRenderer.on('noInstall', (event, messageObj) => {
+			this.hnotify(messageObj);
+		});
 	},
 	methods: {
 		hnotify(message) {

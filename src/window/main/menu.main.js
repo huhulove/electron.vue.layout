@@ -14,7 +14,7 @@ const customMenu = win => {
 					label: '新建文件',
 					// 子标题类型 type String
 					// normal - 正常  separator - 分隔符  submenu - 子菜单  checkbox - 复选框  radio - 单选框
-					type: 'normal',         
+					type: 'normal',
 					// 点击事件
 					click() {
 						// alert('ctrl');
@@ -37,7 +37,8 @@ const customMenu = win => {
 					type: 'normal',
 					click() {
 						// 手动更新
-						checkVersion(win);
+						const { isInstall } = checkVersion(win);
+						!isInstall && win.webContents.send('noInstall', '已经是最新版本');
 					}
 				}
 			]
