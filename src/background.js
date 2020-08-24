@@ -1,8 +1,8 @@
-import { app, protocol, ipcMain } from 'electron';
+import { app, protocol } from 'electron';
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
 
 import createLoginWindow from './window/login/login.window';
-import createMainWindow from './window/main/main.window';
+import monitor from './window/monitor';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
@@ -12,21 +12,6 @@ protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: tru
 let winLogin;
 let isInstall;
 let autoUpdate;
-// 监听打开主窗口
-ipcMain.on('openMainWindow', () => {
-	winLogin.close();
-	const r = createMainWindow();
-	isInstall = r.isInstall;
-	autoUpdate = r.autoUpdate;
-});
-// 监听最小化窗口
-ipcMain.on('minLoginWindow', () => {
-	winLogin.minimize();
-});
-// 监听关闭窗口
-ipcMain.on('maxLoginWindow', () => {
-	app.quit();
-});
 
 // 当所有窗口关闭时则退出应用
 app.on('window-all-closed', () => {
@@ -58,6 +43,12 @@ app.on('ready', async () => {
 	}
 	// 创建登录窗口
 	winLogin = createLoginWindow();
+	// 开启监听
+	const r = await monitor(winLogin);
+	if (r && r.event === 'openMainWindow') {
+		isInstall = r.isInstall;
+		autoUpdate = r.autoUpdate;
+	}
 });
 
 // Exit cleanly on request from parent process in development mode.
