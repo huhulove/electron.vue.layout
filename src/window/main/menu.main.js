@@ -23,6 +23,25 @@ const customMenu = win => {
 			]
 		},
 		{
+			label: '编辑',
+			submenu: [
+				{
+					// 添加快捷键
+					accelerator: 'ctrl+t',
+					// 子标题
+					label: '主题',
+					// 子标题类型 type String
+					// normal - 正常  separator - 分隔符  submenu - 子菜单  checkbox - 复选框  radio - 单选框
+					type: 'normal',
+					// 点击事件
+					click() {
+						// alert('ctrl');
+						win.webContents.send('showThemeSelect');
+					}
+				}
+			]
+		},
+		{
 			label: '帮助',
 			submenu: [
 				{

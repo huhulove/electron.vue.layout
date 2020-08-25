@@ -1,6 +1,5 @@
 import { Notification } from 'element-ui';
 
-const { ipcRenderer } = window.require('electron');
 const updateMixin = {
 	data() {
 		return {
@@ -24,15 +23,14 @@ const updateMixin = {
 		}
 	},
 	mounted() {
-		const that = this;
-		ipcRenderer.on('message', (event, messageObj) => {
-			that.status = messageObj.status;
-			that.message = messageObj.message;
+		this.$ipcRenderer.on('message', (event, messageObj) => {
+			this.status = messageObj.status;
+			this.message = messageObj.message;
 		});
-		ipcRenderer.on('downloadProgress', (event, progressObj) => {
-			that.progress = progressObj.percent || 0;
+		this.$ipcRenderer.on('downloadProgress', (event, progressObj) => {
+			this.progress = progressObj.percent || 0;
 		});
-		ipcRenderer.on('noInstall', (event, messageObj) => {
+		this.$ipcRenderer.on('noInstall', (event, messageObj) => {
 			this.hnotify(messageObj);
 		});
 	},
@@ -96,7 +94,7 @@ const updateMixin = {
 			});
 		},
 		updateNow() {
-			ipcRenderer.send('updateNow');
+			this.$ipcRenderer.send('updateNow');
 		},
 		updateWait() {
 			Notification.closeAll();

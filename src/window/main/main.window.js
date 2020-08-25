@@ -29,7 +29,7 @@ const createMainWindow = () => {
 		const homeUrl = `${process.env.WEBPACK_DEV_SERVER_URL}#/home`;
 		winMain.loadURL(homeUrl);
 		// 打开开发调试工具
-		globalShortcut.register('F12', () => {
+		globalShortcut.register('CTRL+SHIFT+I', () => {
 			if (!process.env.IS_TEST) winMain.webContents.openDevTools();
 		});
 	} else {

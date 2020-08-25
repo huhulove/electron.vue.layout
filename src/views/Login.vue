@@ -16,9 +16,8 @@
 </template>
 
 <script>
-import MenuLogin from '../components/menu.login';
+import MenuLogin from '../components/Menu.login';
 
-const { ipcRenderer } = window.require('electron');
 export default {
 	components: {
 		MenuLogin
@@ -51,7 +50,7 @@ export default {
 		login() {
 			this.$refs.loginForm.validate(valid => {
 				if (valid) {
-					ipcRenderer.send('openMainWindow');
+					this.$ipcRenderer.send('openMainWindow');
 				}
 			});
 		}
