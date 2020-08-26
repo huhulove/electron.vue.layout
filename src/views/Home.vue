@@ -1,8 +1,8 @@
 <template>
-	<div class="home" @click="clickDoc">
+	<div class="home">
 		首页
 		<HelloWorld msg="Welcome to Your Vue.js App" />
-		<SelectTheme v-if="isShowSelectTheme"></SelectTheme>
+		<SelectTheme :visible.sync="isShowSelectTheme"></SelectTheme>
 	</div>
 </template>
 
@@ -30,11 +30,7 @@ export default {
 			this.isShowSelectTheme = false;
 		});
 	},
-	methods: {
-		clickDoc() {
-			this.isShowSelectTheme = false;
-		}
-	}
+	methods: {}
 };
 </script>
 
@@ -42,5 +38,6 @@ export default {
 .home {
 	width: 100%;
 	height: 100%;
+    border-top: 1px solid #f1f1f1;
 }
 </style>
