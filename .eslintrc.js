@@ -32,6 +32,7 @@ module.exports = {
 		'import/extensions': 'off', // 禁用文件名详细文件类型后缀
 		'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
 		'arrow-parens': ['error', 'as-needed'], // 箭头函数参数括号，可选 always：（默认）在所有情况下都需要参数；as-needed：当只有一个参数时允许省略参数
+		'arrow-body-style': ['error', 'always'], // 箭头函数体的周围使用大括号, always: 在函数体周围强制使用大括号; as-needed: 在没有大括号的地方可以省略（默认）; never: 在函数体周围不加任何大括号（限制箭头函数返回表达式的角色）
 		'no-undef': 0, // 关闭显式声明全局变量的要求
 		'class-methods-use-this': 0,
 		'no-underscore-dangle': ['error', { allow: ['_id'] }], // 允许指定的标识符具有悬挂下划线
