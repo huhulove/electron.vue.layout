@@ -14,7 +14,7 @@
 			<template v-for="(item, index) in filterThemeData">
 				<div class="theme-list" :key="index">
 					<el-divider :key="index" v-if="item.label && index !== 0"></el-divider>
-					<el-row class="item" :class="[themeIndex === index ? 'active' : '']">
+					<el-row class="item" :class="[themeIndex === index ? 'active' : '']" @click.native="clickTheme">
 						<el-col :span="20">
 							<span>{{ item.name }}</span>
 						</el-col>
@@ -38,29 +38,33 @@ export default {
 			sourceThemeData: [
 				{
 					name: 'Light (Visual Studio)',
-					label: '浅色主题'
+					label: '浅色主题',
+					theme: '134273'
 				},
 				{
 					name: 'Light+ (Default Light)',
 					label: '',
-					color: ''
+					theme: ''
 				},
 				{
 					name: '苹果绿',
 					label: '',
-					color: ''
+					theme: ''
 				},
 				{
 					name: 'Dark (Visual Studio)',
-					label: '深色主题'
+					label: '深色主题',
+					theme: ''
 				},
 				{
 					name: 'Dark+ (Default Light)',
-					label: ''
+					label: '',
+					theme: ''
 				},
 				{
 					name: '暗夜黑',
-					label: ''
+					label: '',
+					theme: ''
 				}
 			],
 			filterThemeData: []
