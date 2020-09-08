@@ -14,7 +14,7 @@
 			<template v-for="(item, index) in filterThemeData">
 				<div class="theme-list" :key="index">
 					<el-divider :key="index" v-if="item.label && index !== 0"></el-divider>
-					<el-row class="item" :class="[themeIndex === index ? 'active' : '']" @click.native="clickTheme">
+					<el-row class="item" :class="[themeIndex === index ? 'active' : '']" @click.native="clickTheme(item)">
 						<el-col :span="20">
 							<span>{{ item.name }}</span>
 						</el-col>
@@ -77,7 +77,12 @@ export default {
 		preventDefault(ev) {
 			ev.stopPropagation();
 		},
-		clickTheme() {
+		clickTheme(theme) {
+			console.log(theme);
+			this.$ipcRenderer.send('setStore', {
+				key: 'theme',
+				value: '#ccc'
+			});
 			this.$emit('update:visible', false);
 		},
 		inputKey() {

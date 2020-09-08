@@ -15,7 +15,6 @@
     "dependencies": {
         "core-js": "^3.6.5",
         "electron-log": "^4.2.4",
-        "electron-store": "^6.0.0",
         "electron-updater": "^4.3.4",
         "element-ui": "^2.13.2",
         "vue": "^2.6.11",
@@ -30,6 +29,7 @@
         "babel-eslint": "^10.1.0",
         "electron": "^9.0.0",
         "electron-devtools-installer": "^3.1.0",
+        "electron-store": "^6.0.0",
         "eslint": "^6.7.2",
         "eslint-plugin-import": "^2.20.2",
         "eslint-plugin-vue": "^6.2.2",
