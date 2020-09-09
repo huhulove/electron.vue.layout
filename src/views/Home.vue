@@ -1,8 +1,8 @@
 <template>
-	<div class="home">
+	<div class="home" :class="themeColor">
 		首页
 		<HelloWorld msg="Welcome to Your Vue.js App" />
-		<SelectTheme :visible.sync="isShowSelectTheme"></SelectTheme>
+		<SelectTheme :visible.sync="isShowSelectTheme" :theme.sync="theme"></SelectTheme>
 	</div>
 </template>
 
@@ -19,8 +19,14 @@ export default {
 	},
 	data() {
 		return {
-			isShowSelectTheme: false
+			isShowSelectTheme: false,
+			theme: null
 		};
+	},
+	computed: {
+		themeColor() {
+			return `theme-${this.theme}`;
+		}
 	},
 	mounted() {
 		this.$ipcRenderer.on('showThemeSelect', () => {
@@ -28,6 +34,9 @@ export default {
 		});
 		this.$ipcRenderer.on('hideThemeSelect', () => {
 			this.isShowSelectTheme = false;
+		});
+		this.$ipcRenderer.on('theme', (event, theme) => {
+			this.theme = theme;
 		});
 	},
 	methods: {}
@@ -38,6 +47,6 @@ export default {
 .home {
 	width: 100%;
 	height: 100%;
-    border-top: 1px solid #f1f1f1;
+	border-top: 1px solid #f1f1f1;
 }
 </style>

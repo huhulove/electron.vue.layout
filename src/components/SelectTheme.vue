@@ -77,13 +77,13 @@ export default {
 		preventDefault(ev) {
 			ev.stopPropagation();
 		},
-		clickTheme(theme) {
-			console.log(theme);
+		clickTheme({ theme }) {
 			this.$ipcRenderer.send('setStore', {
 				key: 'theme',
-				value: '#ccc'
+				value: theme
 			});
 			this.$emit('update:visible', false);
+			this.$emit('update:theme', theme);
 		},
 		inputKey() {
 			if (!this.themeKey) {

@@ -4,6 +4,7 @@ import path from 'path';
 import customMenu from './menu.main';
 import customTrayMenu from './menu.tray';
 import checkVersion from './APPAutoUpdater';
+import store from '../../plugins/data';
 
 const createMainWindow = () => {
 	let autoUpdate;
@@ -47,11 +48,16 @@ const createMainWindow = () => {
 		customTrayMenu(winMain);
 	});
 
-	// 主页面一旦加载完成后就开始执行检查更新
+	// 主页面加载完成后就开始执行检查更新
 	winMain.webContents.on('did-finish-load', () => {
 		const r = checkVersion(winMain);
 		autoUpdate = r.autoUpdater;
 		isInstall = r.isInstall;
+
+		// 主题色
+		const theme = store.get('theme');
+		console.log(theme);
+		winMain.webContents.send('theme', theme);
 	});
 	return {
 		winMain,

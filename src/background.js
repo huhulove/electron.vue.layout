@@ -3,7 +3,6 @@ import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
 
 import createLoginWindow from './window/login/login.window';
 import monitor from './window/monitor';
-import store from './plugins/data';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
@@ -50,7 +49,6 @@ app.on('ready', async () => {
 		isInstall = r.isInstall;
 		autoUpdate = r.autoUpdate;
 	}
-	console.log(store.get('theme'));
 });
 
 // Exit cleanly on request from parent process in development mode.
