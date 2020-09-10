@@ -56,7 +56,6 @@ const createMainWindow = () => {
 
 		// 主题色
 		const theme = store.get('theme');
-		console.log(theme);
 		winMain.webContents.send('theme', theme);
 	});
 	return {
