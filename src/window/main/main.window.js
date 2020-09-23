@@ -36,7 +36,7 @@ const createMainWindow = () => {
 	} else {
 		createProtocol('app');
 		// 生产模式时加载 index.html
-		winMain.loadURL('app://./index.html');
+		winMain.loadURL('app://./index.html/#/home');
 	}
 	// 关闭窗口
 	winMain.on('closed', () => {

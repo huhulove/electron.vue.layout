@@ -1,4 +1,5 @@
 import { BrowserWindow, globalShortcut } from 'electron';
+import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
 import path from 'path';
 
 const createLoginWindow = () => {

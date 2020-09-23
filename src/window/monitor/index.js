@@ -4,9 +4,11 @@ import store from '../../plugins/data';
 
 const monitor = winLogin => {
 	return new Promise(resolve => {
-	// 监听打开主窗口
+		// 监听打开主窗口
 		ipcMain.on('openMainWindow', () => {
-			winLogin.close();
+			setTimeout(() => {
+				winLogin.close();
+			});
 			resolve({
 				event: 'openMainWindow',
 				data: createMainWindow()
@@ -26,7 +28,7 @@ const monitor = winLogin => {
 		ipcMain.on('setStore', (event, { key, value }) => {
 			store.set(key, value);
 		});
-	}); 
+	});
 };
 
 export default monitor;
